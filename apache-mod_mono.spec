@@ -19,14 +19,14 @@ Source0:	http://mono2.ximian.com/archive/%{version}/%{_name}-%{version}.tar.gz
 Patch0:		%{name}-apu-config.patch
 Patch1:		%{name}-apr_fixes.patch
 URL:		http://www.mono-project.com/
-BuildRequires:	apache-devel >= 2.0
+BuildRequires:	apache-devel >= 2.0.52-2
 BuildRequires:	%{apxs}
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
 BuildRequires:	mono-csharp >= 1.0
 Requires:	xsp
-Requires:	apache >= 2.0
+Requires:	apache >= 2.0.52-2
 Requires:	mono-csharp >= 1.0
 Obsoletes:	mod_mono
 ExcludeArch:	alpha

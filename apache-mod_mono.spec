@@ -91,7 +91,7 @@ LoadModule mono_module modules/mod_%{mod_name}.so
 MonoApplications "/asp_net:%{_httpdir}/asp_net"
 Alias /asp_net "%{_httpdir}/asp_net"
 <Location /asp_net>
-    SetHandler mono
+	SetHandler mono
 </Location>
 EOF
 

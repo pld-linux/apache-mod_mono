@@ -1,79 +1,75 @@
 %define pkg_version 0.3
 %define xsp_version 0.3
-%define module_path /usr/lib/httpd/modules
+Summary:	Mono module for Apache 2
+Summary(pl):	Modu³ Mono dla serwera Apache 2
+Name:		mod_mono
+Version:	0.3.6
+Release:	1
+License:	The Apache License
+Group:		Networking/Daemons
+Source0:	http://www.apacheworld.org/modmono/%{name}-%{pkg_version}.tar.gz
+Source1:	xsp-%{xsp_version}.tar.gz
+Source2:	mono.conf
+BuildRequires:	autoconf
+BuildRequires:	apache-devel
+BuildRequires:	mono
+Requires:	apache
+#Requires:	httpd-mmn = %(cat %{_includedir}/httpd/.mmn)
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-Summary: Mono module for Apache 2
-Name: mod_mono
-Version: 0.3.6
-Release: 1
-License: The Apache License
-Group: System Environment/Daemons
-Source0: http://www.apacheworld.org/modmono/%{name}-%{pkg_version}.tar.gz
-Source1: xsp-%{xsp_version}.tar.gz
-Source2: mono.conf
-BuildRoot: /var/tmp/%{name}-root
-BuildRequires: httpd-devel
-BuildRequires: mono
-BuildRequires: autoconf
-Requires: httpd
-Requires: httpd-mmn = %(cat %{_includedir}/httpd/.mmn)
+%define		httpdir		/home/services/httpd
+%define		htmldir		%{httpdir}/html
+%define		moddir		/usr/lib/apache
 
 %description
-This module allows you to run ASP.NET pages on Unix with Apache and Mono.
+This module allows you to run ASP.NET pages on Unix with Apache and
+Mono.
+
+%description -l pl
+Ten modu³ umo¿liwia uruchamianie stron ASP.NET na Uniksie z serwerem
+Apache i Mono.
 
 %prep
-%setup -n %{name}-%{pkg_version} -a 1
+%setup -q -n %{name}-%{pkg_version} -a 1
 
 %build
 # Build sample ASP.NET pages from xsp distribution
-pushd xsp-%{xsp_version}
-make
-make install
-popd
+cd xsp-%{xsp_version}
+%{__make}
+%{__make} install
+cd ..
 
 # Build Apache Module
-autoconf
-%configure --with-apxs=/usr/sbin/apxs
-make
+%{__autoconf}
+%configure \
+	--with-apxs=%{_sbindir}/apxs
+%{__make}
 
 # Build Mono DLL
-pushd src
-make -f makedll.mak
-popd
+%{__make} -C src -f makedll.mak
 
 %install
-mkdir -p $RPM_BUILD_ROOT/%{_sysconfdir}/httpd/conf.d
-mkdir -p $RPM_BUILD_ROOT/%{module_path}
-mkdir -p $RPM_BUILD_ROOT/var/www/html/mono
-mkdir -p $RPM_BUILD_ROOT/var/www/.wapi
+rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d
+install -d $RPM_BUILD_ROOT%{moddir}
+install -d $RPM_BUILD_ROOT%{htmldir}/mono
+install -d $RPM_BUILD_ROOT%{httpdir}/.wapi
 
-cp %{SOURCE2} $RPM_BUILD_ROOT/%{_sysconfdir}/httpd/conf.d
-install src/.libs/libmod_mono.so $RPM_BUILD_ROOT/%{module_path}
-install src/ModMono.dll $RPM_BUILD_ROOT/%{_libdir}
-cp -r xsp-%{xsp_version}/server/test/* $RPM_BUILD_ROOT/var/www/html/mono
+cp %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d
+install src/.libs/libmod_mono.so $RPM_BUILD_ROOT%{moddir}
+install src/ModMono.dll $RPM_BUILD_ROOT%{_libdir}
+cp -r xsp-%{xsp_version}/server/test/* $RPM_BUILD_ROOT%{htmldir}/mono
 
 %clean
-rm -rf ${RPM_BUILD_ROOT}
+rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr(-,root,root)
+%defattr(644,root,root,755)
 %doc ChangeLog COPYING INSTALL NEWS README
-%{_sysconfdir}/httpd/conf.d/mono.conf
+%attr(755,root,root) %{moddir}/libmod_mono.so
 %{_libdir}/ModMono.dll
-%{_libdir}/httpd/modules/libmod_mono.so
-%defattr(-,apache,apache)
-%{_var}/www/html/mono/
-%{_var}/www/.wapi/
-
-%changelog
-* Mon Feb 03 2003 Daniel Lopez Ridruejo <daniel @ rawbyte.com>
-- Use --with-apxs
-- License is Apache-style
-- Change ownership to apache user
-- Create .wapi directory
-
-* Mon Feb 03 2003 David Hollis <dhollis@davehollis.com>
-- 0.3.4
-
-* Wed Jan 15 2003 David Hollis <dhollis@davehollis.com>
-- Initial spec
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/conf.d/mono.conf
+# FIXME
+%defattr(-,http,http)
+%{htmldir}/mono
+%{httpdir}/.wapi

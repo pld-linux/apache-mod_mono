@@ -1,16 +1,16 @@
-%define xsp_version 0.3
+%define xsp_version 0.4
 Summary:	Mono module for Apache 2
 Summary(pl):	Modu³ Mono dla serwera Apache 2
 Name:		mod_mono
 Version:	0.3
-Release:	1
+Release:	2
 Epoch:		1
 License:	Apache
 Group:		Networking/Daemons
 Source0:	http://www.apacheworld.org/modmono/%{name}-%{version}.tar.gz
 # Source0-md5:	c28a82496cf87de3c91450e47a4efcf1
 Source1:	http://go-mono.com/archive/xsp-%{xsp_version}.tar.gz
-# Source1-md5:	f9e4b53f602f9ad261f9a5bb41026874
+# Source1-md5:	aacb2d6b0dc3f54382c09be0976f6a7f
 Source2:	mono.conf
 URL:		http://www.apacheworld.org/modmono/
 BuildRequires:	autoconf

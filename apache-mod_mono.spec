@@ -50,9 +50,9 @@ Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	mono-csharp >= 1.0
 
 %description -n dotnet-xsp
-Provides a minimalistic web server which hosts the ASP.NET runtime and 
+Provides a minimalistic web server which hosts the ASP.NET runtime and
 can be used to test and debug web applications that use the System.Web
-facilities in  Mono.
+facilities in Mono.
 
 %prep
 %setup -q -n %{mod_name}-%{version}
@@ -78,6 +78,7 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} -C src -f makedll.mak
 
 %install
+rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd.conf,%{_pkglibdir},%{_mandir}/man8}
 
 install src/.libs/libmod_%{mod_name}.so $RPM_BUILD_ROOT%{_pkglibdir}/mod_%{mod_name}.so

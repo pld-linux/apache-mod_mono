@@ -1,3 +1,7 @@
+
+# TODO : figure out how to kill mod-mono-server.exe process 
+#	 when apache is restarted
+
 %define		mod_name mod_mono
 Summary:	Mono module for Apache 2
 Summary(pl):	Modu³ Mono dla serwera Apache 2

@@ -24,6 +24,7 @@ Requires:	xsp
 Requires:	apache >= 2.0
 Requires:	mono-csharp >= 1.0
 Obsoletes:	mod_mono
+ExcludeArch:	alpha
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define 	apxs		%{_sbindir}/apxs

@@ -74,18 +74,22 @@ cd ..
 %{__make} -C src -f makedll.mak
 
 %install
-install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf,%{_pkglibdir}} \
+install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf,%{_pkglibdir},%{_examplesdir}/%{name}-%{version}} \
 	$RPM_BUILD_ROOT%{_httpdir}/{.wapi,mono}
 
 install src/.libs/libmod_mono.so $RPM_BUILD_ROOT%{_pkglibdir}/mod_mono.so
 install src/ModMono.dll $RPM_BUILD_ROOT%{_libdir}
-mv -f $RPM_BUILD_ROOT%{_docdir}/xsp/test $RPM_BUILD_ROOT%{_httpdir}/mono
+mv -f $RPM_BUILD_ROOT%{_docdir}/xsp/test $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
+mv xsp-1.0/INSTALL xsp-1.0/INSTALL-xsp
+mv xsp-1.0/NEWS xsp-1.0/NEWS-xsp
+mv xsp-1.0/README xsp-1.0/README-xsp
+mv xsp-1.0/ChangeLog xsp-1.0/ChangeLog-xsp
 
 cat > $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/70_mod_mono.conf <<EOF
 LoadModule mono_module modules/mod_mono.so
-MonoApplications "/mono/test:%{_httpdir}/mono/test"
-Alias /mono/test "%{_httpdir}/mono/test"
-<Location /mono/test>
+MonoApplications "/mono:%{_httpdir}/mono"
+Alias /mono "%{_httpdir}/mono"
+<Location /mono>
     SetHandler mono
 </Location>
 EOF
@@ -95,12 +99,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc ChangeLog INSTALL NEWS README
+%doc ChangeLog INSTALL NEWS README xsp-1.0/{INSTALL,NEWS,README,ChangeLog}-xsp
 %attr(755,root,root) %{_pkglibdir}/mod_mono.so
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_libdir}/*.dll
-%{_mandir}/man1/*
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/httpd.conf/*
 %attr(750,http,http) %{_httpdir}/.wapi
-%defattr(644,http,http,755)
-%{_httpdir}/mono
+%{_mandir}/man1/*
+%dir %{_examplesdir}/%{name}-%{version}
+%{_examplesdir}/%{name}-%{version}

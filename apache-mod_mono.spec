@@ -1,11 +1,13 @@
-
-# TODO : figure out how to kill mod-mono-server.exe process 
-#	 when apache is restarted
-
-%define		mod_name mod_mono
+#
+# TODO:
+# - figure out how to kill mod-mono-server.exe process
+#   when apache is restarted
+#
+%define		mod_name	mono
+%define 	apxs		/usr/sbin/apxs
 Summary:	Mono module for Apache 2
 Summary(pl):	Modu³ Mono dla serwera Apache 2
-Name:		apache-mod_mono
+Name:		apache-mod_%{mod_name}
 Version:	1.0.1
 Release:	0.9
 Epoch:		1
@@ -16,6 +18,7 @@ Source0:	http://mono2.ximian.com/archive/%{version}/%{mod_name}-%{version}.tar.g
 Patch0:		%{name}-apu-config.patch
 URL:		http://www.mono-project.com/
 BuildRequires:	apache-devel >= 2.0
+BuildRequires:	%{apxs}
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
@@ -27,9 +30,9 @@ Obsoletes:	mod_mono
 ExcludeArch:	alpha
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define 	apxs		%{_sbindir}/apxs
 %define		_httpdir	/home/services/httpd
 %define		_pkglibdir	%(%{apxs} -q LIBEXECDIR)
+%define		_pkglibdir	%(%{apxs} -q SYSCONFDIR)
 
 %description
 This is an experimental module that allows you to run ASP.NET pages on
@@ -67,7 +70,7 @@ rm -rf $RPM_BUILD_ROOT
 	--with-apxs=%{apxs} \
 	--with-apr-config=%{_bindir}/apr-config \
 	--with-apu-config=%{_bindir}/apu-config
-	
+
 %{__make} \
 	DESTDIR=$RPM_BUILD_ROOT
 
@@ -75,14 +78,14 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} -C src -f makedll.mak
 
 %install
-install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf,%{_pkglibdir},%{_mandir}/man8}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd.conf,%{_pkglibdir},%{_mandir}/man8}
 
-install src/.libs/libmod_mono.so $RPM_BUILD_ROOT%{_pkglibdir}/mod_mono.so
+install src/.libs/libmod_%{mod_name}.so $RPM_BUILD_ROOT%{_pkglibdir}/mod_%{mod_name}.so
 install src/ModMono.dll $RPM_BUILD_ROOT%{_libdir}
-install man/mod_mono.8 $RPM_BUILD_ROOT%{_mandir}/man8
+install man/mod_%{mod_name}.8 $RPM_BUILD_ROOT%{_mandir}/man8
 
-cat > $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/70_mod_mono.conf <<EOF
-LoadModule mono_module modules/mod_mono.so
+cat > $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf/70_mod_%{mod_name}.conf <<EOF
+LoadModule mono_module modules/mod_%{mod_name}.so
 MonoApplications "/asp_net:%{_httpdir}/asp_net"
 Alias /asp_net "%{_httpdir}/asp_net"
 <Location /asp_net>
@@ -95,8 +98,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/httpd.conf/*
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd.conf/*
 %doc ChangeLog INSTALL NEWS README
-%attr(755,root,root) %{_pkglibdir}/mod_mono.so
+%attr(755,root,root) %{_pkglibdir}/mod_%{mod_name}.so
 %attr(755,root,root) %{_libdir}/ModMono.dll
 %{_mandir}/man8/*

@@ -3,13 +3,13 @@
 Summary:	Mono module for Apache 2
 Summary(pl):	Modu³ Mono dla serwera Apache 2
 Name:		apache-mod_mono
-Version:	0.3
-Release:	2
+Version:	0.3.7
+Release:	1
 Epoch:		1
 License:	Apache
 Group:		Networking/Daemons
-Source0:	http://www.apacheworld.org/modmono/%{mod_name}-%{version}.tar.gz
-# Source0-md5:	c28a82496cf87de3c91450e47a4efcf1
+Source0:	http://www.apacheworld.org/modmono/%{version}/%{mod_name}-%{version}.tar.gz
+# Source0-md5:	75c7f682ce585382827bb179369a86cc
 Source1:	http://go-mono.com/archive/xsp-%{xsp_version}.tar.gz
 # Source1-md5:	aacb2d6b0dc3f54382c09be0976f6a7f
 Source2:	mono.conf
@@ -23,7 +23,6 @@ Obsoletes:	mod_mono
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		httpdir		/home/services/httpd
-%define		htmldir		%{httpdir}/html
 %define		moddir		/usr/lib/apache
 
 %description
@@ -35,7 +34,7 @@ Ten eksperymentalny modu³ umo¿liwia uruchamianie stron ASP.NET na
 Uniksie z serwerem Apache i Mono.
 
 %prep
-%setup -q -n %{mod_name}-%{version} -a 1
+%setup -q -n %{mod_name}-0.3 -a 1
 
 %build
 # Build sample ASP.NET pages from xsp distribution
@@ -55,13 +54,18 @@ cd ..
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd/conf.d,%{moddir}} \
-	$RPM_BUILD_ROOT%{htmldir}/{mono,.wapi}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf,%{moddir}} \
+	$RPM_BUILD_ROOT%{httpdir}/{.wapi,mono}
 
-cp %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d
-install src/.libs/libmod_mono.so $RPM_BUILD_ROOT%{moddir}
+cp %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/
+install src/.libs/libmod_mono.so $RPM_BUILD_ROOT%{moddir}/mod_mono.so
 install src/ModMono.dll $RPM_BUILD_ROOT%{_libdir}
-cp -r xsp-%{xsp_version}/server/test/* $RPM_BUILD_ROOT%{htmldir}/mono
+cp -r xsp-%{xsp_version}/server/test/* $RPM_BUILD_ROOT%{httpdir}/mono/
+
+cat > $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/70_mod_mono.conf <<EOF
+LoadModule mono_module lib/apache/mod_mono.so
+MonoApplication /mono %{httpdir}/mono/
+EOF
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -69,10 +73,9 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc ChangeLog INSTALL NEWS README
-%attr(755,root,root) %{moddir}/libmod_mono.so
+%attr(755,root,root) %{moddir}/mod_mono.so
 %{_libdir}/ModMono.dll
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/conf.d/mono.conf
-# FIXME
-%defattr(-,http,http)
-%{htmldir}/mono
-%{httpdir}/.wapi
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/httpd.conf/*
+%attr(750,http,http) %{httpdir}/.wapi
+%defattr(644,http,http,755)
+%{httpdir}/mono

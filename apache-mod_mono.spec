@@ -6,13 +6,13 @@
 Summary:	Mono module for Apache 2
 Summary(pl):	Modu³ Mono dla serwera Apache 2
 Name:		apache-mod_mono
-Version:	1.0
-Release:	0.10
+Version:	1.0.1
+Release:	0.9
 Epoch:		1
 License:	Apache
 Group:		Networking/Daemons
-Source0:	http://mono2.ximian.com/archive/1.0/%{mod_name}-%{version}.tar.gz
-# Source0-md5:	154720f6286105d513d1688f4a6e2b29
+Source0:	http://mono2.ximian.com/archive/%{version}/%{mod_name}-%{version}.tar.gz
+# Source0-md5:	5adb398b270865c484cea53b79e3def4
 Patch0:		%{name}-apu-config.patch
 URL:		http://www.mono-project.com/
 BuildRequires:	apache-devel >= 2.0

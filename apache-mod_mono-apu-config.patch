@@ -1,0 +1,127 @@
+diff -Nuard mod_mono-1.0.orig/configure.in mod_mono-1.0/configure.in
+--- mod_mono-1.0.orig/configure.in	2004-06-29 18:01:53.000000000 +0200
++++ mod_mono-1.0/configure.in	2004-07-05 22:41:23.299809912 +0200
+@@ -52,6 +52,29 @@
+ ],
+ AC_MSG_RESULT(not specified))
+ 
++AC_MSG_CHECKING(for --with-apu-config)
++AC_ARG_WITH(apu-config,
++[  --with-apu-config=PATH  Path to apu-config (apache 2.0). You may use
++                          this option when apr-config is not in the same
++			  directory as apxs and the output of
++			  'apu-config --includes' is different from
++			  'apxs -q INCLUDEDIR'.
++],
++[
++  if test -x "$withval"
++  then
++    AC_MSG_RESULT([$withval executable, good])
++    APUCONFIG=$withval
++  else
++    if test "xno" = "x$withval" ; then
++    	AC_MSG_RESULT([no])
++    else
++        AC_MSG_ERROR([$withval not found or not executable])
++    fi
++  fi
++],
++AC_MSG_RESULT(not specified))
++
+ # if no apxs found yet, check /usr/local/apache/sbin
+ # since it's the default Apache location
+ if test -z "$APXS"; then
+@@ -76,6 +99,9 @@
+   if test -z "$APRCONFIG" ; then
+     APRCONFIG=`dirname ${APXS}`/apr-config
+   fi
++  if test -z "$APUCONFIG" ; then
++    APUCONFIG=`dirname ${APXS}`/apu-config
++  fi
+ fi
+ 
+ if test -z "$APRCONFIG"; then
+@@ -89,6 +115,17 @@
+   fi
+ fi
+ 
++if test -z "$APUCONFIG"; then
++  AC_MSG_CHECKING(for apu-config in /usr/local/apache/sbin)
++  if test -x /usr/local/apache/sbin/apu-config; then
++    APUCONFIG=/usr/local/apache/sbin/apu-config
++    AC_MSG_RESULT([found, we'll use this. Use --with-apu-config to specify another.])    
++  else
++    AC_MSG_RESULT(no)
++    APUCONFIG=""
++  fi
++fi
++
+ if test -z "$APXS"; then
+   AC_MSG_CHECKING(for apxs2 in /usr/local/apache2/bin)
+   if test -x /usr/local/apache/bin/apxs2; then
+@@ -120,6 +157,17 @@
+   fi
+ fi
+ 
++if test -z "$APUCONFIG"; then
++  AC_MSG_CHECKING(for apu-config in /usr/local/apache2/bin)
++  if test -x /usr/local/apache2/bin/apu-config; then
++    APUCONFIG=/usr/local/apache2/bin/apu-config
++    AC_MSG_RESULT([found, we'll use this. Use --with-apu-config to specify another.])
++  else
++    AC_MSG_RESULT(no)
++    APUCONFIG=""
++  fi
++fi
++
+ if test -z "$APXS"; then
+   AC_MSG_CHECKING(for apxs2 in /usr/sbin)
+   if test -x /usr/sbin/apxs2; then
+@@ -151,6 +199,17 @@
+   fi
+ fi
+ 
++if test -z "$APUCONFIG"; then
++  AC_MSG_CHECKING(for apu-config in /usr/sbin)
++  if test -x /usr/sbin/apu-config; then
++    APUCONFIG=/usr/sbin/apu-config
++    AC_MSG_RESULT([found, we'll use this. Use --with-apu-config to specify another.])
++  else
++    AC_MSG_RESULT(no)
++    APUCONFIG=""
++  fi
++fi
++
+ # last resort
+ if test -z "$APXS"; then
+   AC_PATH_PROG(APXS, apxs2)
+@@ -168,6 +227,10 @@
+   AC_PATH_PROG(APRCONFIG, apr-config)
+ fi
+ 
++if test -z "$APUCONFIG"; then
++  AC_PATH_PROG(APUCONFIG, apr-config)
++fi
++
+ # determine LIBEXEC
+ AC_MSG_CHECKING(for Apache libexec directory)
+ APXS_LIBEXECDIR=`${APXS} -q LIBEXECDIR`
+@@ -205,8 +268,8 @@
+ fi
+ 
+ # Try apr-config
+-if test "$APACHE_VER" = "retry" -a -x "$APRCONFIG"; then
+-	CFLAGS="$CFLAGS `$APRCONFIG --includes`"
++if test "$APACHE_VER" = "retry" -a -x "$APRCONFIG" -a -x "$APUCONFIG"; then
++	CFLAGS="$CFLAGS `$APRCONFIG --includes` `$APUCONFIG --includes`"
+ 	AC_TRY_COMPILE([
+ 		#include <apr.h>
+ 	], [
+@@ -324,6 +387,7 @@
+ echo "   * apxs = $APXS"
+ test "$APACHE_VER" = "2.0" -a -x "$APRCONFIG" && \
+ echo "   * apr-config = $APRCONFIG"
++echo "   * apu-config = $APUCONFIG"
+ echo "   * mono prefix = $MONO_PREFIX"
+ echo "   * Build old module: $enable_old_module"
+ echo ""

@@ -18,6 +18,7 @@ URL:		http://www.mono-project.com/
 BuildRequires:	apache-devel >= 2.0
 BuildRequires:	autoconf
 BuildRequires:	automake
+BuildRequires:	libtool
 BuildRequires:	mono
 Requires:	apache >= 2.0
 Obsoletes:	mod_mono
@@ -106,5 +107,4 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/httpd.conf/*
 %attr(750,http,http) %{_httpdir}/.wapi
 %{_mandir}/man1/*
-%dir %{_examplesdir}/%{name}-%{version}
 %{_examplesdir}/%{name}-%{version}

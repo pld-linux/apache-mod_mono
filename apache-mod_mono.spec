@@ -15,7 +15,6 @@ License:	Apache
 Group:		Networking/Daemons
 Source0:	http://mono2.ximian.com/archive/%{version}/%{_name}-%{version}.tar.gz
 # Source0-md5:	411a6608a14ac56557804d2b01923b92
-# Source0-size:	18245041
 Patch0:		%{name}-apu-config.patch
 Patch1:		%{name}-apr_fixes.patch
 URL:		http://www.mono-project.com/

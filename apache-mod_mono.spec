@@ -14,7 +14,8 @@ Epoch:		1
 License:	Apache
 Group:		Networking/Daemons
 Source0:	http://mono2.ximian.com/archive/%{version}/%{mod_name}-%{version}.tar.gz
-# Source0-md5:	5adb398b270865c484cea53b79e3def4
+# Source0-md5:	e569c5b5a9153dfe10811c17bfefd884
+# Source0-size:	18245041
 Patch0:		%{name}-apu-config.patch
 URL:		http://www.mono-project.com/
 BuildRequires:	apache-devel >= 2.0

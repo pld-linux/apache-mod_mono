@@ -3,20 +3,21 @@
 # - figure out how to kill mod-mono-server.exe process
 #   when apache is restarted
 #
-%define		mod_name	mono
+%define		_name		mod_mono
 %define 	apxs		/usr/sbin/apxs
 Summary:	Mono module for Apache 2
 Summary(pl):	Modu³ Mono dla serwera Apache 2
-Name:		apache-mod_%{mod_name}
-Version:	1.0.1
-Release:	0.9
+Name:		apache-%{_name}
+Version:	1.0.4
+Release:	1
 Epoch:		1
 License:	Apache
 Group:		Networking/Daemons
-Source0:	http://mono2.ximian.com/archive/%{version}/%{mod_name}-%{version}.tar.gz
+Source0:	http://mono2.ximian.com/archive/%{version}/%{_name}-%{version}.tar.gz
 # Source0-md5:	e569c5b5a9153dfe10811c17bfefd884
 # Source0-size:	18245041
 Patch0:		%{name}-apu-config.patch
+Patch1:		%{name}-apr_fixes.patch
 URL:		http://www.mono-project.com/
 BuildRequires:	apache-devel >= 2.0
 BuildRequires:	%{apxs}
@@ -33,7 +34,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_httpdir	/home/services/httpd
 %define		_pkglibdir	%(%{apxs} -q LIBEXECDIR)
-%define		_pkglibdir	%(%{apxs} -q SYSCONFDIR)
+%define     _sysconfdir /etc/httpd
 
 %description
 This is an experimental module that allows you to run ASP.NET pages on
@@ -43,21 +44,10 @@ Unix with Apache and Mono.
 Ten eksperymentalny modu³ umo¿liwia uruchamianie stron ASP.NET na
 Uniksie z serwerem Apache i Mono.
 
-%package -n dotnet-xsp
-Summary:	Mono ASP.NET Standalone Web Server
-Summary(pl):	Server HTTP obs³uguj±cy ASP.NET
-Group:		Networking/Daemons
-Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	mono-csharp >= 1.0
-
-%description -n dotnet-xsp
-Provides a minimalistic web server which hosts the ASP.NET runtime and
-can be used to test and debug web applications that use the System.Web
-facilities in Mono.
-
 %prep
-%setup -q -n %{mod_name}-%{version}
+%setup -q -n %{_name}-%{version}
 %patch0 -p1
+%patch1 -p1
 
 %build
 rm -rf $RPM_BUILD_ROOT
@@ -69,25 +59,22 @@ rm -rf $RPM_BUILD_ROOT
 
 %configure \
 	--with-apxs=%{apxs} \
-	--with-apr-config=%{_bindir}/apr-config \
-	--with-apu-config=%{_bindir}/apu-config
+	--with-apr-config=%{_bindir}/apr-1-config \
+	--with-apu-config=%{_bindir}/apu-1-config \
+	CFLAGS="%{rpmcflags} -D_GNU_SOURCE -D_LARGEFILE64_SOURCE"
 
 %{__make} \
 	DESTDIR=$RPM_BUILD_ROOT
-
-# Build Mono DLL
-%{__make} -C src -f makedll.mak
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd.conf,%{_pkglibdir},%{_mandir}/man8}
 
-install src/.libs/libmod_%{mod_name}.so $RPM_BUILD_ROOT%{_pkglibdir}/mod_%{mod_name}.so
-install src/ModMono.dll $RPM_BUILD_ROOT%{_libdir}
-install man/mod_%{mod_name}.8 $RPM_BUILD_ROOT%{_mandir}/man8
+install src/.libs/%{_name}.so $RPM_BUILD_ROOT%{_pkglibdir}/%{_name}.so
+install man/%{_name}.8 $RPM_BUILD_ROOT%{_mandir}/man8
 
-cat > $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf/70_mod_%{mod_name}.conf <<EOF
-LoadModule mono_module modules/mod_%{mod_name}.so
+cat > $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf/70_%{_name}.conf <<EOF
+LoadModule mono_module modules/%{_name}.so
 MonoApplications "/asp_net:%{_httpdir}/asp_net"
 Alias /asp_net "%{_httpdir}/asp_net"
 <Location /asp_net>
@@ -102,6 +89,5 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd.conf/*
 %doc ChangeLog INSTALL NEWS README
-%attr(755,root,root) %{_pkglibdir}/mod_%{mod_name}.so
-%attr(755,root,root) %{_libdir}/ModMono.dll
+%attr(755,root,root) %{_pkglibdir}/%{_name}.so
 %{_mandir}/man8/*

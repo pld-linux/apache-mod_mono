@@ -1,18 +1,14 @@
 %define		mod_name mod_mono
-%define 	xsp_version 1.0
-
 Summary:	Mono module for Apache 2
 Summary(pl):	Modu³ Mono dla serwera Apache 2
 Name:		apache-mod_mono
 Version:	1.0
-Release:	0.9
+Release:	0.10
 Epoch:		1
 License:	Apache
 Group:		Networking/Daemons
 Source0:	http://mono2.ximian.com/archive/1.0/%{mod_name}-%{version}.tar.gz
 # Source0-md5:	154720f6286105d513d1688f4a6e2b29
-Source1:	http://mono2.ximian.com/archive/1.0/xsp-%{xsp_version}.tar.gz
-# Source1-md5:	cd681f02d0f93774ba126d77fd377f4b
 Patch0:		%{name}-apu-config.patch
 URL:		http://www.mono-project.com/
 BuildRequires:	apache-devel >= 2.0
@@ -20,6 +16,7 @@ BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
 BuildRequires:	mono-csharp >= 1.0
+Requires:	xsp
 Requires:	apache >= 2.0
 Requires:	mono-csharp >= 1.0
 Obsoletes:	mod_mono
@@ -37,27 +34,24 @@ Unix with Apache and Mono.
 Ten eksperymentalny modu³ umo¿liwia uruchamianie stron ASP.NET na
 Uniksie z serwerem Apache i Mono.
 
+%package -n dotnet-xsp
+Summary:	Mono ASP.NET Standalone Web Server
+Summary(pl):	Server HTTP obs³uguj±cy ASP.NET
+Group:		Networking/Daemons
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	mono-csharp >= 1.0
+
+%description -n dotnet-xsp
+Provides a minimalistic web server which hosts the ASP.NET runtime and 
+can be used to test and debug web applications that use the System.Web
+facilities in  Mono.
+
 %prep
-%setup -q -n %{mod_name}-%{version} -a 1
+%setup -q -n %{mod_name}-%{version}
 %patch0 -p1
 
 %build
 rm -rf $RPM_BUILD_ROOT
-# Build sample ASP.NET pages from xsp distribution
-cd xsp-%{xsp_version}
-%{__aclocal}
-%{__autoconf}
-%{__automake}
-%configure \
-	--with-apxs=%{apxs}
-	
-%{__make} \
-	DESTDIR=$RPM_BUILD_ROOT
-	
-%{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT
-cd ..
-
 # Build Apache Module
 %{__libtoolize}
 %{__aclocal}
@@ -76,22 +70,17 @@ cd ..
 %{__make} -C src -f makedll.mak
 
 %install
-install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf,%{_pkglibdir},%{_examplesdir}/%{name}-%{version}} \
-	$RPM_BUILD_ROOT%{_httpdir}/{.wapi,mono}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf,%{_pkglibdir},%{_mandir}/man8}
 
 install src/.libs/libmod_mono.so $RPM_BUILD_ROOT%{_pkglibdir}/mod_mono.so
 install src/ModMono.dll $RPM_BUILD_ROOT%{_libdir}
-mv -f $RPM_BUILD_ROOT%{_docdir}/xsp/test $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
-mv xsp-1.0/INSTALL xsp-1.0/INSTALL-xsp
-mv xsp-1.0/NEWS xsp-1.0/NEWS-xsp
-mv xsp-1.0/README xsp-1.0/README-xsp
-mv xsp-1.0/ChangeLog xsp-1.0/ChangeLog-xsp
+install man/mod_mono.8 $RPM_BUILD_ROOT%{_mandir}/man8
 
 cat > $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/70_mod_mono.conf <<EOF
 LoadModule mono_module modules/mod_mono.so
-MonoApplications "/mono:%{_httpdir}/mono"
-Alias /mono "%{_httpdir}/mono"
-<Location /mono>
+MonoApplications "/asp_net:%{_httpdir}/asp_net"
+Alias /asp_net "%{_httpdir}/asp_net"
+<Location /asp_net>
     SetHandler mono
 </Location>
 EOF
@@ -101,12 +90,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc ChangeLog INSTALL NEWS README xsp-1.0/{INSTALL,NEWS,README,ChangeLog}-xsp
-%attr(755,root,root) %{_pkglibdir}/mod_mono.so
-%attr(755,root,root) %{_bindir}/*
-%attr(755,root,root) %{_libdir}/*.dll
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/httpd.conf/*
-%attr(750,http,http) %{_httpdir}/.wapi
-%attr(750,http,http) %dir %{_httpdir}/mono
-%{_mandir}/man1/*
-%{_examplesdir}/%{name}-%{version}
+%doc ChangeLog INSTALL NEWS README
+%attr(755,root,root) %{_pkglibdir}/mod_mono.so
+%attr(755,root,root) %{_libdir}/ModMono.dll
+%{_mandir}/man8/*

@@ -67,7 +67,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc ChangeLog COPYING INSTALL NEWS README
+%doc ChangeLog INSTALL NEWS README
 %attr(755,root,root) %{moddir}/libmod_mono.so
 %{_libdir}/ModMono.dll
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/conf.d/mono.conf

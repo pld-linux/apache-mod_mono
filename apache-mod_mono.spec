@@ -5,7 +5,7 @@ Summary:	Mono module for Apache 2
 Summary(pl):	Modu³ Mono dla serwera Apache 2
 Name:		apache-mod_mono
 Version:	1.0
-Release:	0.1
+Release:	0.9
 Epoch:		1
 License:	Apache
 Group:		Networking/Daemons
@@ -40,9 +40,9 @@ Uniksie z serwerem Apache i Mono.
 %patch0 -p1
 
 %build
+rm -rf $RPM_BUILD_ROOT
 # Build sample ASP.NET pages from xsp distribution
 cd xsp-%{xsp_version}
-
 %{__aclocal}
 %{__autoconf}
 %{__automake}
@@ -51,9 +51,9 @@ cd xsp-%{xsp_version}
 	
 %{__make} \
 	DESTDIR=$RPM_BUILD_ROOT
+	
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
-
 cd ..
 
 # Build Apache Module
@@ -74,17 +74,20 @@ cd ..
 %{__make} -C src -f makedll.mak
 
 %install
-rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf,%{_pkglibdir}} \
 	$RPM_BUILD_ROOT%{_httpdir}/{.wapi,mono}
 
 install src/.libs/libmod_mono.so $RPM_BUILD_ROOT%{_pkglibdir}/mod_mono.so
 install src/ModMono.dll $RPM_BUILD_ROOT%{_libdir}
-cp -r xsp-%{xsp_version}/test/*.{exe,aspx,ashx,png,webapp,dll,xml,config} $RPM_BUILD_ROOT%{_httpdir}/mono/
+mv -f $RPM_BUILD_ROOT%{_docdir}/xsp/test $RPM_BUILD_ROOT%{_httpdir}/mono
 
 cat > $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/70_mod_mono.conf <<EOF
-LoadModule mono_module lib/apache/mod_mono.so
-MonoApplication /mono %{_httpdir}/mono/
+LoadModule mono_module modules/mod_mono.so
+MonoApplications "/mono/test:%{_httpdir}/mono/test"
+Alias /mono/test "%{_httpdir}/mono/test"
+<Location /mono/test>
+    SetHandler mono
+</Location>
 EOF
 
 %clean
@@ -94,7 +97,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc ChangeLog INSTALL NEWS README
 %attr(755,root,root) %{_pkglibdir}/mod_mono.so
-%{_libdir}/ModMono.dll
+%attr(755,root,root) %{_bindir}/*
+%attr(755,root,root) %{_libdir}/*.dll
+%{_mandir}/man1/*
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/httpd.conf/*
 %attr(750,http,http) %{_httpdir}/.wapi
 %defattr(644,http,http,755)

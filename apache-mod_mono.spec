@@ -106,5 +106,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/*.dll
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/httpd.conf/*
 %attr(750,http,http) %{_httpdir}/.wapi
+%dir %{_httpdir}/mono
 %{_mandir}/man1/*
 %{_examplesdir}/%{name}-%{version}

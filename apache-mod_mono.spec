@@ -14,7 +14,7 @@ Epoch:		1
 License:	Apache
 Group:		Networking/Daemons
 Source0:	http://mono2.ximian.com/archive/%{version}/%{_name}-%{version}.tar.gz
-# Source0-md5:	e569c5b5a9153dfe10811c17bfefd884
+# Source0-md5:	0ba69cf5716920c75e628715f7236401
 # Source0-size:	18245041
 Patch0:		%{name}-apu-config.patch
 Patch1:		%{name}-apr_fixes.patch

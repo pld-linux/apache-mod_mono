@@ -1,20 +1,22 @@
-%define pkg_version 0.3
 %define xsp_version 0.3
 Summary:	Mono module for Apache 2
 Summary(pl):	Modu³ Mono dla serwera Apache 2
 Name:		mod_mono
-Version:	0.3.6
+Version:	0.3
 Release:	1
-License:	The Apache License
+Epoch:		1
+License:	Apache
 Group:		Networking/Daemons
-Source0:	http://www.apacheworld.org/modmono/%{name}-%{pkg_version}.tar.gz
+Source0:	http://www.apacheworld.org/modmono/%{name}-%{version}.tar.gz
 # Source0-md5:	c28a82496cf87de3c91450e47a4efcf1
-Source1:	xsp-%{xsp_version}.tar.gz
+Source1:	http://go-mono.com/archive/xsp-%{xsp_version}.tar.gz
+# Source1-md5:	f9e4b53f602f9ad261f9a5bb41026874
 Source2:	mono.conf
+URL:		http://www.apacheworld.org/modmono/
 BuildRequires:	autoconf
-BuildRequires:	apache-devel
+BuildRequires:	apache-devel >= 2.0
 BuildRequires:	mono
-Requires:	apache
+Requires:	apache >= 2.0
 #Requires:	httpd-mmn = %(cat %{_includedir}/httpd/.mmn)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -23,15 +25,16 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		moddir		/usr/lib/apache
 
 %description
-This module allows you to run ASP.NET pages on Unix with Apache and
-Mono.
+
+This is an experimental module that allows you to run ASP.NET pages on
+Unix with Apache and Mono.
 
 %description -l pl
-Ten modu³ umo¿liwia uruchamianie stron ASP.NET na Uniksie z serwerem
-Apache i Mono.
+Ten eksperymentalny modu³ umo¿liwia uruchamianie stron ASP.NET na
+Uniksie z serwerem Apache i Mono.
 
 %prep
-%setup -q -n %{name}-%{pkg_version} -a 1
+%setup -q -n %{name}-%{version} -a 1
 
 %build
 # Build sample ASP.NET pages from xsp distribution
@@ -51,10 +54,8 @@ cd ..
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d
-install -d $RPM_BUILD_ROOT%{moddir}
-install -d $RPM_BUILD_ROOT%{htmldir}/mono
-install -d $RPM_BUILD_ROOT%{httpdir}/.wapi
+install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd/conf.d,%{moddir}} \
+	$RPM_BUILD_ROOT%{htmldir}/{mono,.wapi}
 
 cp %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d
 install src/.libs/libmod_mono.so $RPM_BUILD_ROOT%{moddir}

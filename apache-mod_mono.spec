@@ -8,6 +8,7 @@ Release:	1
 License:	The Apache License
 Group:		Networking/Daemons
 Source0:	http://www.apacheworld.org/modmono/%{name}-%{pkg_version}.tar.gz
+# Source0-md5:	c28a82496cf87de3c91450e47a4efcf1
 Source1:	xsp-%{xsp_version}.tar.gz
 Source2:	mono.conf
 BuildRequires:	autoconf

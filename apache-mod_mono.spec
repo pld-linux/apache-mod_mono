@@ -13,8 +13,8 @@ Source1:	http://go-mono.com/archive/xsp-%{xsp_version}.tar.gz
 # Source1-md5:	aacb2d6b0dc3f54382c09be0976f6a7f
 Source2:	mono.conf
 URL:		http://www.apacheworld.org/modmono/
-BuildRequires:	autoconf
 BuildRequires:	apache-devel >= 2.0
+BuildRequires:	autoconf
 BuildRequires:	mono
 Requires:	apache >= 2.0
 #Requires:	httpd-mmn = %(cat %{_includedir}/httpd/.mmn)
@@ -25,7 +25,6 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		moddir		/usr/lib/apache
 
 %description
-
 This is an experimental module that allows you to run ASP.NET pages on
 Unix with Apache and Mono.
 

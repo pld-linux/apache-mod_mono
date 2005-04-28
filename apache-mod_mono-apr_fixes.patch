@@ -1,13 +1,13 @@
 --- mod_mono-1.0.4/configure.in~ 2004-10-29 19:58:03.000000000 +0000
 +++ mod_mono-1.0.4/configure.in	2004-11-20 00:36:32.000000000 +0000
-@@ -323,7 +323,7 @@
- AC_CHECK_FUNCS([setenv putenv setrlimit])
- 
+@@ -371,7 +371,7 @@
+ AC_MSG_RESULT($DFLT_MONO_CONFIG_DIR))
+
  found_apr_socket_connect=no
 -AC_CHECK_LIB(apr-0, apr_socket_connect, found_apr_socket_connect=yes)
 +AC_CHECK_LIB(apr-1, apr_socket_connect, found_apr_socket_connect=yes)
- if test x$found_apr_socket_connect = xyes ; then
- 	AC_DEFINE([HAVE_APR_SOCKET_CONNECT],,[apr_socket_connect is present])
+ if test "x$found_apr_socket_connect" = "xyes" ; then
+        AC_DEFINE([HAVE_APR_SOCKET_CONNECT],,[apr_socket_connect is present])
  fi
 --- mod_mono-1.0.4/src/mod_mono.c~	2004-10-29 19:58:03.000000000 +0000
 +++ mod_mono-1.0.4/src/mod_mono.c	2004-11-20 00:18:59.000000000 +0000

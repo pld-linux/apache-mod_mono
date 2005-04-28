@@ -117,11 +117,11 @@ diff -Nuard mod_mono-1.0.orig/configure.in mod_mono-1.0/configure.in
  	AC_TRY_COMPILE([
  		#include <apr.h>
  	], [
-@@ -324,6 +387,7 @@
+@@ -370,6 +433,7 @@
  echo "   * apxs = $APXS"
  test "$APACHE_VER" = "2.0" -a -x "$APRCONFIG" && \
  echo "   * apr-config = $APRCONFIG"
 +echo "   * apu-config = $APUCONFIG"
+ echo "   * Verbose logging (debug) = $enable_debug"
  echo "   * mono prefix = $MONO_PREFIX"
- echo "   * Build old module: $enable_old_module"
- echo ""
+ echo "   * Default MonoApplicationsConfigDir = $DFLT_MONO_CONFIG_DIR"

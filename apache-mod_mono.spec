@@ -8,13 +8,13 @@
 Summary:	Mono module for Apache 2
 Summary(pl):	Modu³ Mono dla serwera Apache 2
 Name:		apache-%{_name}
-Version:	1.1.9.1
+Version:	1.1.9.2
 Release:	1
 Epoch:		1
 License:	Apache
 Group:		Networking/Daemons
 Source0:	http://www.go-mono.com/sources/%{_name}/%{_name}-%{version}.tar.gz
-# Source0-md5:	293cef039a408acee86ddbde0efce918
+# Source0-md5:	5dd65a43b455bb0a7f33994dbf1057df
 Patch0:		%{name}-apu-config.patch
 Patch1:		%{name}-apr_fixes.patch
 URL:		http://www.mono-project.com/

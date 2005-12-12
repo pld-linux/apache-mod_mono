@@ -18,15 +18,15 @@ Source0:	http://www.go-mono.com/sources/%{_name}/%{_name}-%{version}.tar.gz
 Patch0:		%{name}-apu-config.patch
 Patch1:		%{name}-apr_fixes.patch
 URL:		http://www.mono-project.com/
-BuildRequires:	apache-devel >= 2.0.52-2
 BuildRequires:	%{apxs}
+BuildRequires:	apache-devel >= 2.0.52-2
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
 BuildRequires:	mono-csharp >= 1.0
-Requires:	xsp
 Requires:	apache >= 2.0.52-2
 Requires:	mono-csharp >= 1.0
+Requires:	xsp
 Obsoletes:	mod_mono
 ExcludeArch:	alpha
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -86,7 +86,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd.conf/*
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd.conf/*
 %doc ChangeLog INSTALL NEWS README
 %attr(755,root,root) %{_pkglibdir}/%{_name}.so
 %{_mandir}/man8/*

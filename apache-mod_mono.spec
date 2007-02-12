@@ -3,7 +3,7 @@
 %define		mod_name	mod_mono
 %define 	apxs		/usr/sbin/apxs
 Summary:	Mono module for Apache 2
-Summary(pl.UTF-8):   Moduł Mono dla serwera Apache 2
+Summary(pl.UTF-8):	Moduł Mono dla serwera Apache 2
 Name:		apache-%{mod_name}
 Version:	1.1.10
 Release:	1

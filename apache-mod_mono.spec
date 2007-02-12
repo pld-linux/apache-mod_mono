@@ -3,7 +3,7 @@
 %define		mod_name	mod_mono
 %define 	apxs		/usr/sbin/apxs
 Summary:	Mono module for Apache 2
-Summary(pl):	Modu≥ Mono dla serwera Apache 2
+Summary(pl.UTF-8):   Modu≈Ç Mono dla serwera Apache 2
 Name:		apache-%{mod_name}
 Version:	1.1.10
 Release:	1
@@ -37,8 +37,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 This is an experimental module that allows you to run ASP.NET pages on
 Unix with Apache and Mono.
 
-%description -l pl
-Ten eksperymentalny modu≥ umoøliwia uruchamianie stron ASP.NET na
+%description -l pl.UTF-8
+Ten eksperymentalny modu≈Ç umo≈ºliwia uruchamianie stron ASP.NET na
 Uniksie z serwerem Apache i Mono.
 
 %prep

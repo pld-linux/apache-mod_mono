@@ -15,7 +15,7 @@ Source0:	http://www.go-mono.com/sources/mod_mono/%{mod_name}-%{version}.tar.bz2
 # Source0-md5:	17b5278a22b3502d3b9499943cf02273
 Patch0:		%{name}-apu-config.patch
 URL:		http://www.mono-project.com/
-BuildRequires:	%{apxs}
+BuildRequires:	apache-apxs >= 2.0.52-2
 BuildRequires:	apache-devel >= 2.0.52-2
 BuildRequires:	autoconf
 BuildRequires:	automake

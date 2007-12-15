@@ -5,15 +5,14 @@
 Summary:	Mono module for Apache 2
 Summary(pl.UTF-8):	Moduł Mono dla serwera Apache 2
 Name:		apache-%{mod_name}
-Version:	1.2.4
+Version:	1.2.6
 Release:	1
 Epoch:		1
 License:	Apache
 Group:		Networking/Daemons
 #Source0Download: http://go-mono.com/sources-stable/
-Source0:	http://www.go-mono.com/sources/mod_mono/%{mod_name}-%{version}.tar.bz2
-# Source0-md5:	17b5278a22b3502d3b9499943cf02273
-Patch0:		%{name}-apu-config.patch
+Source0:	http://go-mono.com/sources/mod_mono/%{mod_name}-%{version}.tar.bz2
+# Source0-md5:	51768697b8c714789fb57eddc551a569
 URL:		http://www.mono-project.com/
 BuildRequires:	%{apxs}
 BuildRequires:	apache-devel >= 2.0.52-2
@@ -43,7 +42,6 @@ Uniksie z serwerem Apache i Mono.
 
 %prep
 %setup -q -n %{mod_name}-%{version}
-%patch0 -p1
 
 %build
 # Build Apache Module
@@ -53,10 +51,10 @@ Uniksie z serwerem Apache i Mono.
 %{__automake}
 
 %configure \
+	CFLAGS="%{rpmcflags} -D_GNU_SOURCE -D_LARGEFILE64_SOURCE" \
 	--with-apxs=%{apxs} \
 	--with-apr-config=%{_bindir}/apr-1-config \
-	--with-apu-config=%{_bindir}/apu-1-config \
-	CFLAGS="%{rpmcflags} -D_GNU_SOURCE -D_LARGEFILE64_SOURCE"
+	--with-apu-config=%{_bindir}/apu-1-config
 
 %{__make} \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -84,5 +82,5 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc ChangeLog INSTALL NEWS README
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd.conf/*_mod_%{mod_name}.conf
-%attr(755,root,root) %{_pkglibdir}/*.so
-%{_mandir}/man8/*
+%attr(755,root,root) %{_pkglibdir}/mod_mono.so
+%{_mandir}/man8/mod_mono.8*

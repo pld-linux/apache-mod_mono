@@ -6,7 +6,7 @@ Summary:	Mono module for Apache 2
 Summary(pl.UTF-8):	Moduł Mono dla serwera Apache 2
 Name:		apache-%{mod_name}
 Version:	1.2.6
-Release:	1
+Release:	2
 Epoch:		1
 License:	Apache 2.0
 Group:		Networking/Daemons
@@ -29,8 +29,8 @@ ExcludeArch:	i386
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_httpdir	/home/services/httpd
-%define		_pkglibdir	%(%{apxs} -q LIBEXECDIR 2>/dev/null)
-%define		_sysconfdir	%(%{apxs} -q SYSCONFDIR 2>/dev/null)
+%define		apacheconfdir	%(%{apxs} -q SYSCONFDIR 2>/dev/null)/conf.d
+%define		apachelibdir	%(%{apxs} -q LIBEXECDIR 2>/dev/null)
 
 %description
 This is an experimental module that allows you to run ASP.NET pages on
@@ -61,12 +61,12 @@ Uniksie z serwerem Apache i Mono.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd.conf,%{_pkglibdir},%{_mandir}/man8}
+install -d $RPM_BUILD_ROOT{%{apacheconfdir},%{apachelibdir},%{_mandir}/man8}
 
-install src/.libs/%{mod_name}.so $RPM_BUILD_ROOT%{_pkglibdir}
+install src/.libs/%{mod_name}.so $RPM_BUILD_ROOT%{apachelibdir}
 install man/%{mod_name}.8 $RPM_BUILD_ROOT%{_mandir}/man8
 
-cat > $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf/70_mod_%{mod_name}.conf <<EOF
+cat > $RPM_BUILD_ROOT%{apacheconfdir}/70_mod_%{mod_name}.conf <<'EOF'
 LoadModule mono_module modules/%{mod_name}.so
 MonoApplications "/asp_net:%{_httpdir}/asp_net"
 Alias /asp_net "%{_httpdir}/asp_net"
@@ -81,6 +81,6 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc ChangeLog INSTALL NEWS README
-%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd.conf/*_mod_%{mod_name}.conf
-%attr(755,root,root) %{_pkglibdir}/mod_mono.so
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{apacheconfdir}/*_mod_%{mod_name}.conf
+%attr(755,root,root) %{apachelibdir}/mod_mono.so
 %{_mandir}/man8/mod_mono.8*

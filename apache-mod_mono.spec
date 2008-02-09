@@ -8,7 +8,7 @@ Name:		apache-%{mod_name}
 Version:	1.2.6
 Release:	2
 Epoch:		1
-License:	Apache 2.0
+License:	Apache v2.0
 Group:		Networking/Daemons
 #Source0Download: http://go-mono.com/sources-stable/
 Source0:	http://go-mono.com/sources/mod_mono/%{mod_name}-%{version}.tar.bz2

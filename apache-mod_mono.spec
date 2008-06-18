@@ -5,14 +5,14 @@
 Summary:	Mono module for Apache 2
 Summary(pl.UTF-8):	Moduł Mono dla serwera Apache 2
 Name:		apache-%{mod_name}
-Version:	1.2.6
-Release:	2
+Version:	1.9
+Release:	1
 Epoch:		1
 License:	Apache v2.0
 Group:		Networking/Daemons
-#Source0Download: http://go-mono.com/sources-stable/
-Source0:	http://go-mono.com/sources/mod_mono/%{mod_name}-%{version}.tar.bz2
-# Source0-md5:	51768697b8c714789fb57eddc551a569
+# latest downloads summary at http://ftp.novell.com/pub/mono/sources-stable/
+Source0:	http://ftp.novell.com/pub/mono/sources/mod_mono/%{mod_name}-%{version}.tar.bz2
+# Source0-md5:	f2758a581ef481861759197b2d437511
 URL:		http://www.mono-project.com/
 BuildRequires:	%{apxs}
 BuildRequires:	apache-devel >= 2.0.52-2
@@ -23,7 +23,7 @@ BuildRequires:	mono-csharp >= 1.0
 BuildRequires:	pkgconfig
 Requires:	apache(modules-api) = %apache_modules_api
 Requires:	mono-csharp >= 1.0
-Requires:	xsp
+Requires:	xsp >= 1.9
 Obsoletes:	mod_mono
 ExcludeArch:	i386
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)

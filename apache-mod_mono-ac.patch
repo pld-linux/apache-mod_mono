@@ -1,0 +1,11 @@
+diff -uNr mod_mono-2.4.orig/configure.in mod_mono-2.4/configure.in
+--- mod_mono-2.4.orig/configure.in	2009-03-09 18:02:00.000000000 +0100
++++ mod_mono-2.4/configure.in	2009-04-21 07:07:43.000000000 +0200
+@@ -15,6 +15,7 @@
+         AC_MSG_ERROR([You need to install pkg-config])
+ fi
+ 
++m4_pattern_allow([^PKG_PATH$])
+ PKG_PATH=""
+ AC_ARG_WITH(crosspkgdir, [  --with-crosspkgdir=/path/to/pkg-config/dir],
+         if test x$with_crosspkgdir = "x"; then

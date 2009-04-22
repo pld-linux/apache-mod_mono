@@ -24,7 +24,7 @@ BuildRequires:	mono-csharp >= 1.0
 BuildRequires:	pkgconfig
 Requires:	apache(modules-api) = %apache_modules_api
 Requires:	mono-csharp >= 1.0
-Requires:	xsp >= 1.9
+Requires:	xsp >= 2.4
 Obsoletes:	mod_mono
 ExcludeArch:	i386
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -79,6 +79,14 @@ EOF
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%post
+%service -q httpd restart
+
+%postun
+if [ "$1" = "0" ]; then
+    %service -q httpd restart
+fi
 
 %files
 %defattr(644,root,root,755)

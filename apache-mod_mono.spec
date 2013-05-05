@@ -1,12 +1,12 @@
 # TODO:
 # - figure out how to kill mod-mono-server.exe process when apache is restarted
 %define		mod_name	mod_mono
-%define 	apxs		/usr/sbin/apxs
+%define		apxs		/usr/sbin/apxs
 Summary:	Mono module for Apache 2
 Summary(pl.UTF-8):	Moduł Mono dla serwera Apache 2
 Name:		apache-%{mod_name}
 Version:	2.10
-Release:	1
+Release:	2
 Epoch:		1
 License:	Apache v2.0
 Group:		Networking/Daemons/HTTP

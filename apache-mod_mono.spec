@@ -14,6 +14,7 @@ Group:		Networking/Daemons/HTTP
 Source0:	http://ftp.novell.com/pub/mono/sources/mod_mono/%{mod_name}-%{version}.tar.bz2
 # Source0-md5:	422c533a0dfbd699eb6339234261150a
 Patch0:		apache-mod_mono-ac.patch
+Patch1:		mod_mono-apache24.patch
 URL:		http://www.mono-project.com/
 BuildRequires:	%{apxs}
 BuildRequires:	apache-devel >= 2.0.52-2
@@ -44,6 +45,7 @@ Uniksie z serwerem Apache i Mono.
 %prep
 %setup -q -n %{mod_name}-%{version}
 %patch0 -p1
+%patch1 -p1
 
 %build
 # Build Apache Module

@@ -1,9 +1,8 @@
-diff -uNr mod_mono-2.4.orig/configure.in mod_mono-2.4/configure.in
---- mod_mono-2.4.orig/configure.in	2009-03-09 18:02:00.000000000 +0100
-+++ mod_mono-2.4/configure.in	2009-04-21 07:07:43.000000000 +0200
+--- mod_mono-3.12/configure.in.orig	2015-01-12 18:50:02.000000000 +0100
++++ mod_mono-3.12/configure.in	2015-01-26 21:20:57.164211692 +0100
 @@ -1,6 +1,6 @@
  AC_INIT(src/mod_mono.c)
- AM_INIT_AUTOMAKE(mod_mono, 2.10)
+ AM_INIT_AUTOMAKE(mod_mono, 3.12)
 -AM_CONFIG_HEADER(include/mod_mono_config.h:config.in)
 +AC_CONFIG_HEADERS(include/mod_mono_config.h:config.in)
  

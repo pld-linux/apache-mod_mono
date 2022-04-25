@@ -2,7 +2,7 @@
 +++ mod_mono-3.12/configure.in	2015-01-26 21:20:57.164211692 +0100
 @@ -1,6 +1,6 @@
  AC_INIT(src/mod_mono.c)
- AM_INIT_AUTOMAKE(mod_mono, 3.12)
+ AM_INIT_AUTOMAKE(mod_mono, 3.13)
 -AM_CONFIG_HEADER(include/mod_mono_config.h:config.in)
 +AC_CONFIG_HEADERS(include/mod_mono_config.h:config.in)
  

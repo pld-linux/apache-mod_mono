@@ -43,7 +43,7 @@ Uniksie z serwerem Apache i Mono.
 
 %prep
 %setup -q -n %{mod_name}-%{version}
-%patch0 -p1
+%patch -P0 -p1
 
 %build
 # Build Apache Module
